@@ -1,84 +1,39 @@
 #include "main.h"
 
 /**
- * print_int - prints an integer
- * @l: va_list of arguments from _printf
- * @f: pointer to the struct flags determining
- * if a flag is passed to _printf
- * Return: number of char printed
+ * get_print - selects the right printing function
+ * depending on the conversion specifier passed to _printf
+ * @s: character that holds the conversion specifier
+ * Description: the function loops through the structs array
+ * func_arr[] to find a match between the specifier passed to _printf
+ * and the first element of the struct, and then the approriate
+ * printing function
+ * Return: a pointer to the matching printing function
  */
-int print_int(va_list l, flags_t *f)
+int (*get_print(char s))(va_list, flags_t *)
 {
-	int n = va_arg(l, int);
-	int res = count_digit(n);
+	ph func_arr[] = {
+		{'i', print_int},
+		{'s', print_string},
+		{'c', print_char},
+		{'d', print_int},
+		{'u', print_unsigned},
+		{'x', print_hex},
+		{'X', print_hex_big},
+		{'b', print_binary},
+		{'o', print_octal},
+		{'R', print_rot13},
+		{'r', print_rev},
+		{'S', print_bigS},
+		{'p', print_address},
+		{'%', print_percent}
+		};
+	int flags = 14;
 
-	if (f->space == 1 && f->plus == 0 && n >= 0)
-		res += _putchar(' ');
-	if (f->plus == 1 && n >= 0)
-		res += _putchar('+');
-	if (n <= 0)
-		res++;
-	print_number(n);
-	return (res);
-}
+	register int i;
 
-/**
- * print_unsigned - prints an unsigned integer
- * @l: va_list of arguments from _printf
- * @f: pointer to the struct flags determining
- * if a flag is passed to _printf
- * Return: number of char printed
- */
-int print_unsigned(va_list l, flags_t *f)
-{
-	unsigned int u = va_arg(l, unsigned int);
-	char *str = convert(u, 10, 0);
-
-	(void)f;
-	return (_puts(str));
-}
-
-/**
- * print_number - helper function that loops through
- * an integer and prints all its digits
- * @n: integer to be printed
- */
-void print_number(int n)
-{
-	unsigned int n1;
-
-	if (n < 0)
-	{
-		_putchar('-');
-		n1 = -n;
-	}
-	else
-		n1 = n;
-
-	if (n1 / 10)
-		print_number(n1 / 10);
-	_putchar((n1 % 10) + '0');
-}
-
-/**
- * count_digit - returns the number of digits in an integer
- * for _printf
- * @i: integer to evaluate
- * Return: number of digits
- */
-int count_digit(int i)
-{
-	unsigned int d = 0;
-	unsigned int u;
-
-	if (i < 0)
-		u = i * -1;
-	else
-		u = i;
-	while (u != 0)
-	{
-		u /= 10;
-		d++;
-	}
-	return (d);
+	for (i = 0; i < flags; i++)
+		if (func_arr[i].c == s)
+			return (func_arr[i].f);
+	return (NULL);
 }
