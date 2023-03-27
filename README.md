@@ -6,6 +6,7 @@ Hello, welcome to our first group project, we are Writing our own printf() fucnt
 
 
 **Task 0: I'm not going anywhere. You can print that wherever you want to. I'm here and I'm a Spur for life**
+                   
                    A function that produces output according to a format..
 
 **Task 1: Education is when you read the fine print. Experience is what you get if you don't**
@@ -65,7 +66,7 @@ Hello, welcome to our first group project, we are Writing our own printf() fucnt
 **Task 14:  The flood of print has turned reading into a process of gulping rather than savoring**
 
                       Handle the custom conversion specifier
-**Task 15:  __*__ **
+**Task 15:  (__*__)**
 
                      All the above options work well together.
 
