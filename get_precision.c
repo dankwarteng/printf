@@ -8,34 +8,46 @@
  * Return: Precision
  */
 
-int get_precision(const char *format, int *i, va_list list)
+#include <stdarg.h>
+
+/**
+ * get_precision - Calculates the precision for printing.
+ *
+ * @format: The format string.
+ * @i: A pointer to the current index in the format string.
+ * @...: The variable arguments.
+ *
+ * Returns: The precision.
+ */
+int get_precision(const char *format, int *i, ...)
 {
-	int curr_i = *i + 1;
-	int precision = -1;
+    va_list args;
+    int curr_i = *i + 1;
+    int precision = -1;
 
-	if (format[curr_i] != '.')
-		return (precision);
+    va_start(args, i);
 
-	precision = 0;
+    if (format[curr_i] != '.') {
+        va_end(args);
+        return precision;
+    }
 
-	for (curr_i += 1; format[curr_i] != '\0'; curr_i++)
-	{
-		if (is_digit(format[curr_i]))
-		{
-			precision *= 10;
-			precision += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			precision = va_arg(list, int);
-			break;
-		}
-		else
-			break;
-	}
+    precision = 0;
 
-	*i = curr_i - 1;
+    curr_i++;
+    if (format[curr_i] == '*') {
+        precision = va_arg(args, int);
+        curr_i++;
+    } else {
+        while (format[curr_i] >= '0' && format[curr_i] <= '9') {
+            precision = (precision * 10) + (format[curr_i] - '0');
+            curr_i++;
+        }
+    }
 
-	return (precision);
+    *i = curr_i - 1;
+
+    va_end(args);
+
+    return precision;
 }
